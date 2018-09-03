@@ -7,16 +7,19 @@ export default class App extends React.Component {
     scale: new Animated.Value(1),
     opacity: new Animated.Value(1),
   }
+  orchestration = () => {
+    Animated.sequence([this.animateHeight(),this.animateScale()])
+  }
 
   animateHeight = () => {
     const {height} = this.state
     Animated.timing(
       height,
       {
-        toValue: 0,
-        duration: 500
+        toValue: 900,
+        duration:500
       }
-    )
+    ).start()
   }
 
   animateScale = () => {
@@ -25,33 +28,32 @@ export default class App extends React.Component {
       opacity,
       {
         toValue: 0,
-        duration: 100
+        duration:100
       }
     ).start();
     Animated.spring(
       scale,
       {
-        toValue: 15,
-        velocity: 75,
+        toValue:20,
         tension:30,
-        duration: 500
+        duration:2000
       }
     ).start();
   }
-
+  
   render() {   
     const {height,scale,opacity} = this.state;
 
     return (
       <View style={styles.container}>
-        <Animated.View  style={{backgroundColor: 'blueviolet', position: "relative", height}}>
-          <TouchableOpacity onPress={this.animateScale}>
+        <Animated.View style={{backgroundColor: 'blueviolet', position: "relative", height}}>
+          <TouchableOpacity onPress={this.orchestration}>
             <Animated.View style={[{transform:[{scale:scale}]}, styles.circle]}>
               <Animated.Text style={{opacity}}>12</Animated.Text>
             </Animated.View>
           </TouchableOpacity>
         </Animated.View>
-        <View  style={[styles.halfContainer, {backgroundColor: 'white'}]}>
+        <View  style={{backgroundColor: 'white'}}>
         </View>
       </View>
     );
@@ -61,9 +63,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  halfContainer:{
-    height: "50%"
   },
   circle:{
     flex:1,
